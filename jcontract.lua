@@ -27,7 +27,7 @@
 
 local r = {}
 
-r['version'] = {0, 2, 0}
+r['version'] = {0, 3, 0}
 
 -- Allow overriding our error response
 r['collapse'] = function(boolean, message)
@@ -132,6 +132,14 @@ r['FloatRange'] = function(start, finish)
 
 	  ret = r['collapse'](x < finish, string.format("FloatRange<RangeViolation>: Value(%s) too large on %s. Expected a value less than %s.", x, kind, finish))
 	  if ret ~= nil then return ret end
+	end
+end
+
+r['String'] = function()
+	return function(x, kind)
+		local ret = nil
+		ret = r['collapse'](type(x) == 'string', string.format("String<ContractViolation>: Expected a string, recieved: %s", type(x)))
+		if ret ~= nil then return ret end
 	end
 end
 

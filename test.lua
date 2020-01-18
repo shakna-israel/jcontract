@@ -50,6 +50,13 @@ assert(contract.FloatRange(0, 5.0)({}) == bad)
 assert(contract.FloatRange(0, 5.0)(0.1) ~= bad)
 assert(contract.FloatRange(0, 5.0)(4.9) ~= bad)
 
+-- String Successes
+assert(contract.String()(1) == bad)
+assert(contract.String()({}) == bad)
+assert(contract.String()(1.1) == bad)
+-- String Failures
+assert(contract.String()("a") ~= bad)
+
 -- StringFixed Failures
 assert(contract.StringFixed(5)("a") == bad)
 assert(contract.StringFixed(5)(0) == bad)

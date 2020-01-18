@@ -159,6 +159,16 @@ If also specifies:
 * ```start``` is a number
 * ```finish``` is a number
 
+## contract.String
+
+This is a Type Specifier.
+
+    contract.String()
+
+It specifies the given object is:
+
+* A string
+
 ## contract.StringFixed
 
 This is a Type Specifier.
