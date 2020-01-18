@@ -27,7 +27,7 @@
 
 local r = {}
 
-r['version'] = {0, 0, 4}
+r['version'] = {0, 0, 5}
 
 -- Allow overriding our error response
 r['collapse'] = function(boolean, message)
