@@ -27,7 +27,7 @@
 
 local r = {}
 
-r['version'] = {0, 1, 0}
+r['version'] = {0, 2, 0}
 
 -- Allow overriding our error response
 r['collapse'] = function(boolean, message)
@@ -219,6 +219,14 @@ local is_array = function(t)
 
 	is_array_checks[check] = #t == count
 	return #t == count
+end
+
+r['Array'] = function()
+  return function(x, kind)
+    local ret = nil
+    ret = r['collapse'](is_array(x), "Array<ContractViolation>: Expected an array.")
+    if ret ~= nil then return ret end
+  end
 end
 
 r['ArrayTyped'] = function(TypeSpecifier)

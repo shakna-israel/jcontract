@@ -191,6 +191,17 @@ If also specifies:
 * ```start``` is a whole number
 * ```finish``` is a whole number
 
+## contract.Array
+
+This is a Type Specifier.
+
+    contract.Array()
+
+If specifies the given object is:
+
+* A table
+* An array-like table
+
 ## contract.ArrayTyped
 
 This is a Type Specifier.

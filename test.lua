@@ -68,6 +68,15 @@ assert(contract.StringRange(0, 6)("aaaaaa") == bad)
 assert(contract.StringRange(0, 6)("hello") ~= bad)
 assert(contract.StringRange(0, 6)("a") ~= bad)
 
+-- Array Failures
+assert(contract.Array()({'a', 'b', c=12}) == bad)
+assert(contract.Array()({c=12}) == bad)
+assert(contract.Array()(12) == bad)
+assert(contract.Array()("a") == bad)
+-- Array Successes
+assert(contract.Array()({'a', 'b', 'c'}) ~= bad)
+assert(contract.Array()({1, 2, 3}) ~= bad)
+
 -- ArrayTyped Failures
 assert(contract.ArrayTyped(contract.IntRange(0, 5))({0}) == bad)
 assert(contract.ArrayTyped(contract.IntRange(0, 5))({5}) == bad)
