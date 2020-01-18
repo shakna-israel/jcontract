@@ -319,4 +319,9 @@ r['Union'] = function(TypeSpecifierA, TypeSpecifierB)
 	end
 end
 
+r['Any'] = function()
+  return function(x, kind)
+  end
+end
+
 return r

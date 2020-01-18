@@ -12,26 +12,6 @@ contract.collapse = function(boolean, message)
   end
 end
 
--- Test the example function
-
-local double_it = contract.contract(contract.IntRange(0, 10), {contract.IntRange(0, 5)},
-  function(x)
-    return 2 * x
-  end)
-
--- Failures
-assert(double_it() == bad)
-assert(double_it('a') == bad)
-assert(double_it(5) == bad)
-assert(double_it(0) == bad)
-assert(double_it(-10) == bad)
-
--- Passes
-assert(double_it(1) ~= bad)
-assert(double_it(2) ~= bad)
-assert(double_it(3) ~= bad)
-assert(double_it(4) ~= bad)
-
 -- IntRange Failures
 assert(contract.IntRange(0, 5)(0) == bad)
 assert(contract.IntRange(0, 5)(-1) == bad)
@@ -113,9 +93,30 @@ assert(contract.Union(contract.IntRange(0, 5), contract.FloatRange(0.0, 5.0))(0)
 assert(contract.Union(contract.IntRange(0, 5), contract.FloatRange(0.0, 5.0))(1.2) ~= bad)
 assert(contract.Union(contract.IntRange(0, 5), contract.FloatRange(0.0, 5.0))(1) ~= bad)
 
--- TODO: Test: Contract
+-- Todo: contract.Any
 
--- TODO: Test: Contract User type specifiers using README example
+-- Contract
+-- Test the example function
+
+local double_it = contract.contract(contract.IntRange(0, 10), {contract.IntRange(0, 5)},
+  function(x)
+    return 2 * x
+  end)
+
+-- Failures
+assert(double_it() == bad)
+assert(double_it('a') == bad)
+assert(double_it(5) == bad)
+assert(double_it(0) == bad)
+assert(double_it(-10) == bad)
+
+-- Passes
+assert(double_it(1) ~= bad)
+assert(double_it(2) ~= bad)
+assert(double_it(3) ~= bad)
+assert(double_it(4) ~= bad)
+
+-- Contract User type specifiers using README example
 local MyTypeSpecifier = function()
   return function(x, kind)
     local r = contract.collapse(type(x.name) == "string", "MyType<ContractViolation>: Name should be a string")
@@ -123,6 +124,25 @@ local MyTypeSpecifier = function()
   end
 end
 
-assert(false, "Testing suite not fully implemented.")
+local set_name = contract.contract(MyTypeSpecifier(), {MyTypeSpecifier()}, function(x)
+	x.name = "Hello"
+	return x
+end)
+
+local set_name_bad = contract.contract(MyTypeSpecifier(), {MyTypeSpecifier()}, function(x)
+	x.name = 21
+	return x
+end)
+
+-- Failures
+assert(set_name({}) == bad)
+assert(set_name('a') == bad)
+assert(set_name({1,2,3}) == bad)
+assert(set_name({x = ""}) == bad)
+assert(set_name_bad({name = ""}) == bad)
+
+-- Passes
+assert(set_name({name = ""}) ~= bad)
+assert(set_name({name = "sdfghj"}) ~= bad)
 
 print("Testing suite passed.")
