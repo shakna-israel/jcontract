@@ -33,9 +33,14 @@ assert(double_it(3) ~= bad)
 assert(double_it(4) ~= bad)
 
 -- Test Array Type
-local test_array = contract.contract(contract.ArrayTyped(contract.IntRange(0, 10)), {contract.ArrayTyped(contract.IntRange(0, 10))}, function(v)
-	return v
-end)
+local test_array = contract.contract(
+	-- Return type
+	contract.ArrayTyped(contract.IntRange(0, 10)),
+	-- Argument types
+	{contract.ArrayTyped(contract.IntRange(0, 10))},
+	function(v)
+	  return v
+	end)
 
 assert(test_array({a = 2}) == bad)
 assert(test_array({1, 2, 3}) ~= bad)

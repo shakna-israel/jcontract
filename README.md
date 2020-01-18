@@ -170,6 +170,23 @@ It also specifies:
 
 * Every item of the array matches the given Type Specifier.
 
+## contract.ArrayFixed
+
+This is a Type Specifier.
+
+    contract.ArrayFixed(N, TypeSpecifier)
+
+It specifies the given object is:
+
+* A table
+* An array-like table
+* Exactly N items long
+
+It also specifies:
+
+* N is a whole number
+* Every item of the array matches the given Type Specifier.
+
 ---
 
 ## License

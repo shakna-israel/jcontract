@@ -27,7 +27,7 @@
 
 local r = {}
 
-r['version'] = {0, 0, 1}
+r['version'] = {0, 0, 2}
 
 -- Allow overriding our error response
 r['collapse'] = function(boolean, message)
@@ -165,9 +165,25 @@ r['StringRange'] = function(start, finish)
 	end
 end
 
--- TODO: This is expensive, it should be memoised.
+-- This is expensive, so we memoise it.
+local is_array_checks = {}
 local is_array = function(t)
 	if not type(t) == 'table' then return false end
+
+	local check = string.format("%s", t)
+	if is_array_checks[check] then
+		return is_array_checks[check]
+	end
+
+	-- Prevent memoiser taking up too much space
+	local mem_count = 0
+	for k, v in pairs(is_array_checks) do
+		mem_count = mem_count + 1
+		if mem_count > 50 then
+			-- Naively blow up the cache
+			is_array_checks = {}
+		end
+	end
 
 	local max = 0
 	local count = 0
@@ -176,10 +192,12 @@ local is_array = function(t)
 		if type(k) == 'number' then
 			count = count + 1
 		else
+			is_array_checks[check] = false
 			return false
 		end
 	end
 
+	is_array_checks[check] = #t == count
 	return #t == count
 end
 
@@ -197,6 +215,29 @@ r['ArrayTyped'] = function(TypeSpecifier)
 	  end
 
 	end
+end
+
+r['ArrayFixed'] = function(length, TypeSpecifier)
+  return function(x, kind)
+    local ret = nil
+
+    ret = r['collapse'](type(length) == 'number', string.format("ArrayFixed<ContractViolation>: length is a %s not a number.", type(length)))
+    if ret ~= nil then return ret end
+
+    ret = r['collapse'](math.floor(length) == length, string.format("ArrayFixed<ContractViolation>: length is not a whole number."))
+    if ret ~= nil then return ret end
+
+    ret = r['collapse'](is_array(x), "ArrayFixed<ContractViolation>: Expected an array.")
+    if ret ~= nil then return ret end
+
+    ret = r['collapse'](#x == length, "ArrayFixed<RangeViolation>: Expected an array of length %d but got %d", length, #x)
+    if ret ~= nil then return ret end
+
+    for idx, cell in ipairs(x) do
+    	ret = TypeSpecifier(cell)
+    	if ret ~= nil then return ret end
+    end
+  end
 end
 
 return r
