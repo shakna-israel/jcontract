@@ -94,13 +94,28 @@ assert(contract.ArrayFixed(5, contract.IntRange(0, 5))(0) == bad)
 -- ArrayFixed Successes
 assert(contract.ArrayFixed(5, contract.IntRange(0, 5))({1,1,1,1,1}) ~= bad)
 
--- Test: ArrayRange
+-- ArrayRange Failures
+assert(contract.ArrayRange(0, 5, contract.IntRange(0, 5))('a') == bad)
+assert(contract.ArrayRange(0, 5, contract.IntRange(0, 5))({1,2,3,4,5}) == bad)
+assert(contract.ArrayRange(0, 5, contract.IntRange(0, 5))({1,2,60,4}) == bad)
+-- ArrayRange Successes
+assert(contract.ArrayRange(0, 5, contract.IntRange(0, 5))({1}) ~= bad)
+assert(contract.ArrayRange(0, 5, contract.IntRange(0, 5))({1,2}) ~= bad)
+assert(contract.ArrayRange(0, 5, contract.IntRange(0, 5))({1,2,3}) ~= bad)
+assert(contract.ArrayRange(0, 5, contract.IntRange(0, 5))({1,2,3,4}) ~= bad)
 
--- Test: Union
+-- Union Failures
+assert(contract.Union(contract.IntRange(0, 5), contract.FloatRange(0.0, 5.0))('a') == bad)
+assert(contract.Union(contract.IntRange(0, 5), contract.FloatRange(0.0, 5.0))({}) == bad)
+assert(contract.Union(contract.IntRange(0, 5), contract.FloatRange(0.0, 5.0))(-0.0) == bad)
+assert(contract.Union(contract.IntRange(0, 5), contract.FloatRange(0.0, 5.0))(0) == bad)
+-- Union Successes
+assert(contract.Union(contract.IntRange(0, 5), contract.FloatRange(0.0, 5.0))(1.2) ~= bad)
+assert(contract.Union(contract.IntRange(0, 5), contract.FloatRange(0.0, 5.0))(1) ~= bad)
 
--- Test: Contract
+-- TODO: Test: Contract
 
--- Test: Contract User type specifiers using README example
+-- TODO: Test: Contract User type specifiers using README example
 local MyTypeSpecifier = function()
   return function(x, kind)
     local r = contract.collapse(type(x.name) == "string", "MyType<ContractViolation>: Name should be a string")

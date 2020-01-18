@@ -231,7 +231,7 @@ r['ArrayFixed'] = function(length, TypeSpecifier)
     ret = r['collapse'](is_array(x), "ArrayFixed<ContractViolation>: Expected an array.")
     if ret ~= nil then return ret end
 
-    ret = r['collapse'](#x == length, "ArrayFixed<RangeViolation>: Expected an array of length %d but got %d", length, #x)
+    ret = r['collapse'](#x == length, string.format("ArrayFixed<RangeViolation>: Expected an array of length %d but got %d", length, #x))
     if ret ~= nil then return ret end
 
     for idx, cell in ipairs(x) do
@@ -312,7 +312,8 @@ r['Union'] = function(TypeSpecifierA, TypeSpecifierB)
 
 		-- Failed to match either 
 		if not check_a and not check_b then
-			r['collapse'](false, "Union<ContractViolation>: Did not match either given specifiers on %s", kind)
+			ret = r['collapse'](false, string.format("Union<ContractViolation>: Did not match either given specifiers on %s", kind))
+			if ret ~= nil then return ret end
 		end
 
 	end
