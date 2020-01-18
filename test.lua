@@ -32,18 +32,30 @@ assert(double_it(2) ~= bad)
 assert(double_it(3) ~= bad)
 assert(double_it(4) ~= bad)
 
--- Test Array Type
-local test_array = contract.contract(
-	-- Return type
-	contract.ArrayTyped(contract.IntRange(0, 10)),
-	-- Argument types
-	{contract.ArrayTyped(contract.IntRange(0, 10))},
-	function(v)
-	  return v
-	end)
+assert(false, "Testing suite not fully implemented.")
 
-assert(test_array({a = 2}) == bad)
-assert(test_array({1, 2, 3}) ~= bad)
+-- Test: IntRange
 
--- Test Union
-assert(contract.Union(contract.IntRange(0, 10), contract.FloatRange(0, 10))(1.8) ~= bad)
+-- Test: FloatRange
+
+-- Test: StringFixed
+
+-- Test: StringRange
+
+-- Test: ArrayTyped
+
+-- Test: ArrayFixed
+
+-- Test: ArrayRange
+
+-- Test: Union
+
+-- Test: Contract
+
+-- Test: Contract User type specifiers using README example
+local MyTypeSpecifier = function()
+  return function(x, kind)
+    local r = contract.collapse(type(x.name) == "string", "MyType<ContractViolation>: Name should be a string")
+    if r ~= nil then return r end
+  end
+end

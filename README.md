@@ -78,6 +78,8 @@ It takes a Type Specifier for the expected return type, an array of Type Specifi
 
     contract.collapse(boolean, message)
 
+### Overriding
+
 This is the function to override if you wish to change how the contract behaves.
 
 If contract.collapse returns anything other than nil, then the called function will immediately return that value.
@@ -87,6 +89,19 @@ The boolean represents success or failure of the contract.
 The message is a string designed to be human readable - the exact construction of the string is not guaranteed and can be changed arbitrarily between versions.
 
 The test suite makes use of overriding so that we can test the contract library, it may be a good place to look if you need an example.
+
+### User Type Specifiers
+
+If you want to define your own contract Type Specifier, such as for objects of your own classes, then you'll use this function.
+
+A Type Specifier should look something like:
+
+	local MyTypeSpecifier = function()
+	  return function(x, kind)
+	    local r = contract.collapse(type(x.name) == "string", "MyType<ContractViolation>: Name should be a string")
+	    if r ~= nil then return r end
+	  end
+	end
 
 ## contract.IntRange
 
