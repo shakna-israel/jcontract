@@ -27,7 +27,7 @@
 
 local r = {}
 
-r['version'] = {0, 0, 5}
+r['version'] = {0, 0, 6}
 
 -- Allow overriding our error response
 r['collapse'] = function(boolean, message)
@@ -317,6 +317,32 @@ r['Union'] = function(TypeSpecifierA, TypeSpecifierB)
 		end
 
 	end
+end
+
+r['Struct'] = function(specifiers)
+  return function(x, kind)
+    local ret = nil
+
+    ret = r['collapse'](type(x) == 'table', string.format("Struct<ContractViolation>: Requires a table, not a %s", type(x)))
+    if ret ~= nil then return ret end
+
+    for k, v in pairs(specifiers) do
+    	-- Check the key actually exists
+    	ret = r['collapse'](x[k] ~= nil, string.format("Struct<KeyViolation>: Key missing: %s", k))
+    	if ret ~= nil then return ret end
+    end
+
+    for k, v in pairs(x) do
+    	-- Check key specified
+    	ret = r['collapse'](specifiers[k] ~= nil, string.format("Struct<KeyViolation>: Key not specified: %s", k))
+    	if ret ~= nil then return ret end
+
+    	-- Check value specifies
+    	ret = specifiers[k](v, string.format("struct(%s)", kind))
+    	if ret ~= nil then return ret end
+    end
+
+  end
 end
 
 r['Any'] = function()

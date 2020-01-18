@@ -231,6 +231,28 @@ It specifies the given object:
 
 * Matches at least one of the two given Type Specifiers
 
+## contract.Struct
+
+This is a Type Specifier.
+
+    contract.Struct(tbl)
+
+This takes a table, where every key is linked to a Type Specifier.
+
+It specifies the given object:
+
+* Has all the keys given
+* Has only the keys given
+* Each value matches the corresponding given Type Specifier
+
+## contract.Any
+
+This is a Type Specifier.
+
+    contract.Any()
+
+This guarantees nothing at all, and should not generally be used.
+
 ---
 
 ## License

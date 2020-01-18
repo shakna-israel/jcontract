@@ -93,7 +93,18 @@ assert(contract.Union(contract.IntRange(0, 5), contract.FloatRange(0.0, 5.0))(0)
 assert(contract.Union(contract.IntRange(0, 5), contract.FloatRange(0.0, 5.0))(1.2) ~= bad)
 assert(contract.Union(contract.IntRange(0, 5), contract.FloatRange(0.0, 5.0))(1) ~= bad)
 
--- Todo: contract.Any
+-- Struct Failures
+assert(contract.Struct({a=contract.IntRange(0, 5), b=contract.IntRange(0, 5)})({a=1, b=2, c=3}) == bad)
+assert(contract.Struct({a=contract.IntRange(0, 5), b=contract.IntRange(0, 5)})({}) == bad)
+assert(contract.Struct({a=contract.IntRange(0, 5), b=contract.IntRange(0, 5)})({a=1, c=3}) == bad)
+-- Struct Successes
+assert(contract.Struct({a=contract.IntRange(0, 5), b=contract.IntRange(0, 5)})({a=1, b=2}) ~= bad)
+
+-- Any always succeeds
+assert(contract.Any()('a') ~= bad)
+assert(contract.Any()({}) ~= bad)
+assert(contract.Any()(1) ~= bad)
+assert(contract.Any()(2.1) ~= bad)
 
 -- Contract
 -- Test the example function
