@@ -187,6 +187,35 @@ It also specifies:
 * N is a whole number
 * Every item of the array matches the given Type Specifier.
 
+## contract.ArrayRange
+
+This is a Type Specifier.
+
+    contract.ArrayRange(start, finish, TypeSpecifier)
+
+It specifies the given object is:
+
+* A table
+* An array-like table
+* More than ```start``` items long
+* Less than ```finish``` items long
+
+It also specifies:
+
+* ```start``` is a whole number
+* ```finish``` is a whole number
+* Every item of the array matches the given Type Specifier.
+
+## contract.Union
+
+This is a Type Specifier.
+
+    contract.Union(TypeSpecifier_A, TypeSpecifier_B)
+
+It specifies the given object:
+
+* Matches at least one of the two given Type Specifiers
+
 ---
 
 ## License

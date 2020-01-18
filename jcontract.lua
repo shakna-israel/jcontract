@@ -27,7 +27,7 @@
 
 local r = {}
 
-r['version'] = {0, 0, 2}
+r['version'] = {0, 0, 3}
 
 -- Allow overriding our error response
 r['collapse'] = function(boolean, message)
@@ -238,6 +238,83 @@ r['ArrayFixed'] = function(length, TypeSpecifier)
     	if ret ~= nil then return ret end
     end
   end
+end
+
+r['ArrayRange'] = function(start, finish, TypeSpecifier)
+	return function(x, kind)
+		local ret = nil
+
+		-- Check start
+		ret = r['collapse'](type(start) == 'number', string.format("ArrayRange<ContractViolation>: start is a %s not a number.", type(start)))
+		if ret ~= nil then return ret end
+		ret = r['collapse'](math.floor(start) == start, "ArrayRange<ContractViolation>: start is not an integer.")
+		if ret ~= nil then return ret end
+
+		-- Check finish
+		ret = r['collapse'](type(finish) == 'number', string.format("ArrayRange<ContractViolation>: finish is a %s not a number.", type(start)))
+		if ret ~= nil then return ret end
+		ret = r['collapse'](math.floor(finish) == finish, "ArrayRange<ContractViolation>: finish is not an integer.")
+		if ret ~= nil then return ret end
+
+		-- Check is array
+		ret = r['collapse'](is_array(x), "ArrayRange<ContractViolation>: Expected an array.")
+		if ret ~= nil then return ret end
+
+		-- Check array minimum length
+		ret = r['collapse'](#x > start, string.format("ArrayRange<RangeViolation>: Expected an array of greater than %d length, received %d", #x, start))
+		if ret ~= nil then return ret end
+
+		-- Check array maximum length
+		ret = r['collapse'](#x < finish, string.format("ArrayRange<RangeViolation>: Expected an array of less than %d length, received %d", #x, start))
+		if ret ~= nil then return ret end
+
+		-- Check arguments
+		for idx, cell in ipairs(x) do
+    		ret = TypeSpecifier(cell)
+    		if ret ~= nil then return ret end
+    	end
+	end
+end
+
+r['Union'] = function(TypeSpecifierA, TypeSpecifierB)
+	return function(x, kind)
+		local ret = nil
+
+		local collapse_keep = r['collapse']
+
+		local bad = {}
+		r['collapse'] = function(boolean, message)
+			if boolean == false then return bad end
+		end
+
+		local check_a = false
+		local check_b = false
+
+		ret = TypeSpecifierA(x, kind)
+		if ret ~= bad then
+			check_a = true
+		end
+
+		ret = TypeSpecifierB(x, kind)
+		if ret == bad then
+			-- Matches TypeSpecifierA
+			if check_a then
+				r['collapse'] = collapse_keep
+				return
+			end
+		else
+			check_b = true
+		end
+
+		-- Restore
+		r['collapse'] = collapse_keep
+
+		-- Failed to match either 
+		if not check_a and not check_b then
+			r['collapse'](false, "Union<ContractViolation>: Did not match either given specifiers.")
+		end
+
+	end
 end
 
 return r

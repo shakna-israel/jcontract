@@ -44,3 +44,6 @@ local test_array = contract.contract(
 
 assert(test_array({a = 2}) == bad)
 assert(test_array({1, 2, 3}) ~= bad)
+
+-- Test Union
+assert(contract.Union(contract.IntRange(0, 10), contract.FloatRange(0, 10))(1.8) ~= bad)
