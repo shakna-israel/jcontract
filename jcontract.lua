@@ -27,6 +27,8 @@
 
 local r = {}
 
+r['version'] = {0, 0, 0}
+
 -- Allow overriding our error response
 r['collapse'] = function(boolean, message)
 	assert(boolean, message)
@@ -77,7 +79,7 @@ r['IntRange'] = function(start, finish)
 	  ret = r['collapse'](math.floor(finish) == finish, string.format("IntRange<ContractViolation>: Specified finish value is not an integer."))
 	  if ret ~= nil then return ret end
 
-	  ret = r['collapse'](type(x) == 'number', string.format("IntRange<TypeViolation>: %s is not an integer on %s", type(x), kind))
+	  ret = r['collapse'](type(x) == 'number', string.format("IntRange<TypeViolation>: %s(%s) is not an integer on %s", type(x), x, kind))
 	  if ret ~= nil then return ret end
 
 	  ret = r['collapse'](math.floor(x) == x, string.format("IntRange<TypeViolation>: Float is not an integer on %s", kind))

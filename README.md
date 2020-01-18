@@ -14,8 +14,8 @@ Current master: [![builds.sr.ht status](https://builds.sr.ht/~shakna/jcontract.s
 
     local double_it = contract.contract(contract.IntRange(0, 10), {contract.IntRange(0, 5)},
   		function(x)
-    	return 2 * x
-  	end)
+    		return 2 * x
+  		end)
 
 This constructs a function with a runtime contract that it:
 
@@ -26,7 +26,7 @@ When the contract is violated, it'll crash (unless you've overriden this behavio
 
     double_it('a')
 
-> luajit: ./jcontract.lua:5: IntRange<TypeViolation>: string is not an integer on argument
+> luajit: ./jcontract.lua:5: IntRange<TypeViolation>: string(a) is not an integer on argument
 
 	stack traceback:
 		[C]: in function 'assert'
@@ -58,6 +58,14 @@ The table name used for the following is 'contract', and is for demonstration on
 
 For now, we're assuming: ```local contract = require "jcontract"```
 
+## contract.version
+
+This is the version of the library in use. It takes the form of a 3-number array.
+
+If the first number of the array is 0, then breaking changes may occur, and the numbers are only guaranteed to increase.
+
+If the first number of the array is not 0, then breaking changes only occur when the first number is incremented.
+
 ## contract.contract
 
 This is the main binding for everything.
@@ -74,7 +82,9 @@ This is the function to override if you wish to change how the contract behaves.
 
 If contract.collapse returns anything other than nil, then the called function will immediately return that value.
 
-The boolean represents success or failure of the contract, and comes with an accompanying human-readable message.
+The boolean represents success or failure of the contract.
+
+The message is a string designed to be human readable - the exact construction of the string is not guaranteed and can be changed arbitrarily between versions.
 
 The test suite makes use of overriding so that we can test the contract library, it may be a good place to look if you need an example.
 
