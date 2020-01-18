@@ -12,6 +12,21 @@ contract.collapse = function(boolean, message)
   end
 end
 
+-- Integer Failures
+assert(contract.Integer()('a') == bad)
+assert(contract.Integer()(1.1) == bad)
+assert(contract.Integer()({}) == bad)
+-- Integer Successes
+assert(contract.Integer()(1) ~= bad)
+assert(contract.Integer()(100000) ~= bad)
+
+-- Float Failures
+assert(contract.Float()('a') == bad)
+assert(contract.Float()({}) == bad)
+-- Float Successes
+assert(contract.Float()(1.1) ~= bad)
+assert(contract.Float()(11) ~= bad)
+
 -- IntRange Failures
 assert(contract.IntRange(0, 5)(0) == bad)
 assert(contract.IntRange(0, 5)(-1) == bad)

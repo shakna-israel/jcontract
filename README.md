@@ -103,6 +103,27 @@ A Type Specifier should look something like:
 	  end
 	end
 
+## contract.Integer
+
+This is a Type Specifier.
+
+    contract.Integer()
+
+It specifies the given object is:
+
+* A number
+* A whole number
+
+## contract.Float
+
+This is a Type Specifier.
+
+    contract.Float()
+
+It specifies the given object is:
+
+* A number
+
 ## contract.IntRange
 
 This is a Type Specifier.

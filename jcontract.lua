@@ -27,7 +27,7 @@
 
 local r = {}
 
-r['version'] = {0, 0, 6}
+r['version'] = {0, 1, 0}
 
 -- Allow overriding our error response
 r['collapse'] = function(boolean, message)
@@ -59,6 +59,25 @@ r['contract'] = function(returnType, argumentTypes, f)
 
 	  return v
 	end
+end
+
+r['Integer'] = function()
+  return function(x, kind)
+    local ret = nil
+    ret = r['collapse'](type(x) == 'number', string.format("Integer<ContractViolation>: Specified value is not a number: %s", x))
+  	if ret ~= nil then return ret end
+
+  	ret = r['collapse'](math.floor(x) == x, string.format("Integer<ContractViolation>: Specified value is not an integer: %s", x))
+  	if ret ~= nil then return ret end
+  end
+end
+
+r['Float'] = function()
+  return function(x, kind)
+  	local ret = nil
+    ret = r['collapse'](type(x) == 'number', string.format("Float<ContractViolation>: Specified value is not a number: %s", x))
+  	if ret ~= nil then return ret end
+  end
 end
 
 -- Constructs the integer range assertion function
