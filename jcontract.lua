@@ -27,7 +27,7 @@
 
 local r = {}
 
-r['version'] = {0, 0, 3}
+r['version'] = {0, 0, 4}
 
 -- Allow overriding our error response
 r['collapse'] = function(boolean, message)
@@ -139,6 +139,7 @@ end
 -- A string type with a safe range
 r['StringRange'] = function(start, finish)
 	return function(x, kind)
+
 	  -- Return ret from collapse, in case collapse is overridden to return
 	  local ret = nil
 
@@ -154,13 +155,13 @@ r['StringRange'] = function(start, finish)
 	  ret = r['collapse'](math.floor(finish) == finish, string.format("StringRange<ContractViolation>: Specified start value is not an integer."))
 	  if ret ~= nil then return ret end
 
-	  r['collapse'](type(x) == 'string', string.format("StringRange<TypeViolation>: %s is not a string on %s.", x, kind))
+	  ret = r['collapse'](type(x) == 'string', string.format("StringRange<TypeViolation>: %s is not a string on %s.", x, kind))
 	  if ret ~= nil then return ret end
 
-	  r['collapse'](#x > start, string.format("StringRange<RangeViolation>: Length(%s) too small on %s. Expected a length of at least %s.", #x, kind, length))
+	  ret = r['collapse'](#x > start, string.format("StringRange<RangeViolation>: Length(%s) too small on %s. Expected a length of at least %s.", #x, kind, start))
 	  if ret ~= nil then return ret end
 
-	  r['collapse'](#x < finish, string.format("StringRange<RangeViolation>: Length(%s) too large on %s. Expected a length of less than %s.", #x, kind, length))
+	  ret = r['collapse'](#x < finish, string.format("StringRange<RangeViolation>: Length(%s) too large on %s. Expected a length of less than %s.", #x, kind, finish))
 	  if ret ~= nil then return ret end
 	end
 end

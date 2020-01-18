@@ -32,15 +32,46 @@ assert(double_it(2) ~= bad)
 assert(double_it(3) ~= bad)
 assert(double_it(4) ~= bad)
 
-assert(false, "Testing suite not fully implemented.")
+-- IntRange Failures
+assert(contract.IntRange(0, 5)(0) == bad)
+assert(contract.IntRange(0, 5)(-1) == bad)
+assert(contract.IntRange(0, 5)(1.1) == bad)
+assert(contract.IntRange(0, 5)('a') == bad)
+assert(contract.IntRange(0, 5)({}) == bad)
+-- IntRange Successes
+assert(contract.IntRange(0, 5)(1) ~= bad)
+assert(contract.IntRange(0, 5)(2) ~= bad)
+assert(contract.IntRange(0, 5)(3) ~= bad)
+assert(contract.IntRange(0, 5)(4) ~= bad)
 
--- Test: IntRange
+-- FloatRange Failures
+assert(contract.FloatRange(0, 5.0)(0) == bad)
+assert(contract.FloatRange(0, 5.0)(-0.0) == bad)
+assert(contract.FloatRange(0, 5.0)(-0.1) == bad)
+assert(contract.FloatRange(0, 5.0)(5.0) == bad)
+assert(contract.FloatRange(0, 5.0)('a') == bad)
+assert(contract.FloatRange(0, 5.0)({}) == bad)
+-- FloatRange Successes
+assert(contract.FloatRange(0, 5.0)(0.1) ~= bad)
+assert(contract.FloatRange(0, 5.0)(4.9) ~= bad)
 
--- Test: FloatRange
+-- StringFixed Failures
+assert(contract.StringFixed(5)("a") == bad)
+assert(contract.StringFixed(5)(0) == bad)
+assert(contract.StringFixed(5)({}) == bad)
+assert(contract.StringFixed(5)("aaaaaaaaa") == bad)
+-- StringFixed Successes
+assert(contract.StringFixed(5)("hello") ~= bad)
 
--- Test: StringFixed
+-- StringRange Failures
+assert(contract.StringRange(0, 6)("") == bad)
+assert(contract.StringRange(0, 6)(1) == bad)
+assert(contract.StringRange(0, 6)({}) == bad)
+assert(contract.StringRange(0, 6)("aaaaaa") == bad)
 
--- Test: StringRange
+-- StringRange Successes
+assert(contract.StringRange(0, 6)("hello") ~= bad)
+assert(contract.StringRange(0, 6)("a") ~= bad)
 
 -- Test: ArrayTyped
 
@@ -59,3 +90,7 @@ local MyTypeSpecifier = function()
     if r ~= nil then return r end
   end
 end
+
+assert(false, "Testing suite not fully implemented.")
+
+print("Testing suite passed.")
