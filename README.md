@@ -103,6 +103,13 @@ A Type Specifier should look something like:
 	  end
 	end
 
+And used in the usual way:
+
+	local set_name = contract.contract(MyTypeSpecifier(), {MyTypeSpecifier()}, function(x)
+		x.name = "Hello"
+		return x
+	end)
+
 ## contract.Integer
 
 This is a Type Specifier.
