@@ -85,7 +85,14 @@ assert(contract.ArrayTyped(contract.IntRange(0, 5))({1,2,3,4}) ~= bad)
 assert(contract.ArrayTyped(contract.IntRange(0, 5))({4,4,4,4,4,4,4,4,4,4}) ~= bad)
 assert(contract.ArrayTyped(contract.IntRange(0, 5))({1}) ~= bad)
 
--- Test: ArrayFixed
+-- ArrayFixed Failures
+assert(contract.ArrayFixed(5, contract.IntRange(0, 5))({1,1,1,1}) == bad)
+assert(contract.ArrayFixed(5, contract.IntRange(0, 5))({1,1,1,1,60}) == bad)
+assert(contract.ArrayFixed(5, contract.IntRange(0, 5))({a=2}) == bad)
+assert(contract.ArrayFixed(5, contract.IntRange(0, 5))('a') == bad)
+assert(contract.ArrayFixed(5, contract.IntRange(0, 5))(0) == bad)
+-- ArrayFixed Successes
+assert(contract.ArrayFixed(5, contract.IntRange(0, 5))({1,1,1,1,1}) ~= bad)
 
 -- Test: ArrayRange
 
