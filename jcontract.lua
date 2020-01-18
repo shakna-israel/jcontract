@@ -85,7 +85,7 @@ r['IntRange'] = function(start, finish)
 	  ret = r['collapse'](math.floor(x) == x, string.format("IntRange<TypeViolation>: Float is not an integer on %s", kind))
 	  if ret ~= nil then return ret end
 
-	  ret = r['collapse'](x > start, string.format("IntRange<RangeViolation>: Value(%s) too small on %s. Expected a value of at least %s.", x, kind, start))
+	  ret = r['collapse'](x > start, string.format("IntRange<RangeViolation>: Value(%s) too small on %s. Expected a value greater than %s.", x, kind, start))
 	  if ret ~= nil then return ret end
 
 	  ret = r['collapse'](x < finish, string.format("IntRange<RangeViolation>: Value(%s) too large on %s. Expected a value less than %s.", x, kind, finish))
@@ -108,7 +108,7 @@ r['FloatRange'] = function(start, finish)
 	  ret = r['collapse'](type(x) == 'number', string.format("FloatRange<TypeViolation>: %s is not an integer on %s", type(x), kind))
 	  if ret ~= nil then return ret end
 
-	  ret = r['collapse'](x > start, string.format("FloatRange<RangeViolation>: Value(%s) too small on %s. Expected a value of at least %s.", x, kind, start))
+	  ret = r['collapse'](x > start, string.format("FloatRange<RangeViolation>: Value(%s) too small on %s. Expected a greater than %s.", x, kind, start))
 	  if ret ~= nil then return ret end
 
 	  ret = r['collapse'](x < finish, string.format("FloatRange<RangeViolation>: Value(%s) too large on %s. Expected a value less than %s.", x, kind, finish))
@@ -169,7 +169,7 @@ end
 -- This is expensive, so we memoise it.
 local is_array_checks = {}
 local is_array = function(t)
-	if not type(t) == 'table' then return false end
+	if type(t) ~= 'table' then return false end
 
 	local check = string.format("%s", t)
 	if is_array_checks[check] then
@@ -211,7 +211,7 @@ r['ArrayTyped'] = function(TypeSpecifier)
 	  if ret ~= nil then return ret end
 
 	  for idx, cell in ipairs(x) do
-	  	ret = TypeSpecifier(cell)
+	  	ret = TypeSpecifier(cell, string.format("%s(array)", kind))
 	  	if ret ~= nil then return ret end
 	  end
 
@@ -235,7 +235,7 @@ r['ArrayFixed'] = function(length, TypeSpecifier)
     if ret ~= nil then return ret end
 
     for idx, cell in ipairs(x) do
-    	ret = TypeSpecifier(cell)
+    	ret = TypeSpecifier(cell, string.format("%s(array)", kind))
     	if ret ~= nil then return ret end
     end
   end
@@ -271,7 +271,7 @@ r['ArrayRange'] = function(start, finish, TypeSpecifier)
 
 		-- Check arguments
 		for idx, cell in ipairs(x) do
-    		ret = TypeSpecifier(cell)
+    		ret = TypeSpecifier(cell, string.format("%s(array)", kind))
     		if ret ~= nil then return ret end
     	end
 	end
@@ -291,12 +291,12 @@ r['Union'] = function(TypeSpecifierA, TypeSpecifierB)
 		local check_a = false
 		local check_b = false
 
-		ret = TypeSpecifierA(x, kind)
+		ret = TypeSpecifierA(x, string.format("%s(union)", kind))
 		if ret ~= bad then
 			check_a = true
 		end
 
-		ret = TypeSpecifierB(x, kind)
+		ret = TypeSpecifierB(x, string.format("%s(union)", kind))
 		if ret == bad then
 			-- Matches TypeSpecifierA
 			if check_a then
@@ -312,7 +312,7 @@ r['Union'] = function(TypeSpecifierA, TypeSpecifierB)
 
 		-- Failed to match either 
 		if not check_a and not check_b then
-			r['collapse'](false, "Union<ContractViolation>: Did not match either given specifiers.")
+			r['collapse'](false, "Union<ContractViolation>: Did not match either given specifiers on %s", kind)
 		end
 
 	end
