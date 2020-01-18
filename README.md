@@ -52,6 +52,20 @@ Or, for something that takes advantage of the range specifics:
 
 ---
 
+## Performance
+
+This is a runtime-based contract library. There is a performance penalty.
+
+It has been reduced where possible, and shouldn't be particularly onerous.
+
+However, any time you're dealing with keys, know that every key must be iterated over (until a problem is found or it passes).
+
+Any time you pass an array, we need to check that it actually is an array. The array check is cached, with a limited-size cache, in an attempt to reduce overhead, but this is still an expensive operation due to the nature of Lua.
+
+Contracts are only checked when the function is called, building them has little overhead as it involves generating functions and not much more.
+
+---
+
 ## API
 
 The table name used for the following is 'contract', and is for demonstration only. However you import this may change it.
