@@ -4,6 +4,10 @@ A simple contract library for Lua
 
 ---
 
+Current master: [![builds.sr.ht status](https://builds.sr.ht/~shakna/jcontract.svg)](https://builds.sr.ht/~shakna/jcontract?)
+
+---
+
 ## Example Code
 
     local contract = require "jcontract"
