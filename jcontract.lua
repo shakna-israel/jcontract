@@ -27,7 +27,7 @@
 
 local r = {}
 
-r['version'] = {0, 0, 0}
+r['version'] = {0, 0, 1}
 
 -- Allow overriding our error response
 r['collapse'] = function(boolean, message)
@@ -162,6 +162,40 @@ r['StringRange'] = function(start, finish)
 
 	  r['collapse'](#x < finish, string.format("StringRange<RangeViolation>: Length(%s) too large on %s. Expected a length of less than %s.", #x, kind, length))
 	  if ret ~= nil then return ret end
+	end
+end
+
+-- TODO: This is expensive, it should be memoised.
+local is_array = function(t)
+	if not type(t) == 'table' then return false end
+
+	local max = 0
+	local count = 0
+
+	for k, v in pairs(t) do
+		if type(k) == 'number' then
+			count = count + 1
+		else
+			return false
+		end
+	end
+
+	return #t == count
+end
+
+r['ArrayTyped'] = function(TypeSpecifier)
+	return function(x, kind)
+
+	  local ret = nil
+
+	  ret = r['collapse'](is_array(x), "ArrayTyped<ContractViolation>: Expected an array.")
+	  if ret ~= nil then return ret end
+
+	  for idx, cell in ipairs(x) do
+	  	ret = TypeSpecifier(cell)
+	  	if ret ~= nil then return ret end
+	  end
+
 	end
 end
 

@@ -68,17 +68,17 @@ If the first number of the array is not 0, then breaking changes only occur when
 
 ## contract.contract
 
-This is the main binding for everything.
-
     contract.contract(ReturnSpecifier, {ArgumentSpecifier...}, function)
+
+This is the main binding for everything.
 
 It takes a Type Specifier for the expected return type, an array of Type Specifiers for the expected argument types, and the function to apply the contract to.
 
 ## contract.collapse
 
-This is the function to override if you wish to change how the contract behaves.
-
     contract.collapse(boolean, message)
+
+This is the function to override if you wish to change how the contract behaves.
 
 If contract.collapse returns anything other than nil, then the called function will immediately return that value.
 
@@ -90,9 +90,9 @@ The test suite makes use of overriding so that we can test the contract library,
 
 ## contract.IntRange
 
-    contract.IntRange(start, finish)
-
 This is a Type Specifier.
+
+    contract.IntRange(start, finish)
 
 It specifies the given object is:
 
@@ -110,6 +110,8 @@ If also specifies:
 
 This is a Type Specifier.
 
+    contract.FloatRange(start, finish)
+
 It specifies the given object is:
 
 * A number
@@ -125,6 +127,8 @@ If also specifies:
 
 This is a Type Specifier.
 
+    contract.StringFixed(N)
+
 It specifies the given object is:
 
 * A string
@@ -134,9 +138,11 @@ If also specifies:
 
 * N is a whole number
 
-## constract.StringRange
+## contract.StringRange
 
 This is a Type Specifier.
+
+    contract.StringRange(start, finish)
 
 It specifies the given object is:
 
@@ -148,6 +154,21 @@ If also specifies:
 
 * ```start``` is a whole number
 * ```finish``` is a whole number
+
+## contract.ArrayTyped
+
+This is a Type Specifier.
+
+    contract.ArrayTyped(TypeSpecifier)
+
+It specifies the given object is:
+
+* A table
+* An array-like table
+
+It also specifies:
+
+* Every item of the array matches the given Type Specifier.
 
 ---
 
