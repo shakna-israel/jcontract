@@ -27,7 +27,7 @@
 
 local r = {}
 
-r['version'] = {0, 4, 0}
+r['version'] = {0, 5, 0}
 
 -- Allow overriding our error response
 r['collapse'] = function(boolean, message)
@@ -64,10 +64,10 @@ end
 r['Integer'] = function()
   return function(x, kind)
     local ret = nil
-    ret = r['collapse'](type(x) == 'number', string.format("Integer<ContractViolation>: Specified value is not a number: %s", x))
+    ret = r['collapse'](type(x) == 'number', string.format("Integer<TypeViolation>: Specified value is not a number: %s", x))
   	if ret ~= nil then return ret end
 
-  	ret = r['collapse'](math.floor(x) == x, string.format("Integer<ContractViolation>: Specified value is not an integer: %s", x))
+  	ret = r['collapse'](math.floor(x) == x, string.format("Integer<TypeViolation>: Specified value is not an integer: %s", x))
   	if ret ~= nil then return ret end
   end
 end
@@ -75,7 +75,7 @@ end
 r['Float'] = function()
   return function(x, kind)
   	local ret = nil
-    ret = r['collapse'](type(x) == 'number', string.format("Float<ContractViolation>: Specified value is not a number: %s", x))
+    ret = r['collapse'](type(x) == 'number', string.format("Float<TypeViolation>: Specified value is not a number: %s", x))
   	if ret ~= nil then return ret end
   end
 end
@@ -83,7 +83,7 @@ end
 r['Nil'] = function()
 	return function(x, kind)
 		local ret = nil
-		ret = r['collapse'](type(x) == 'nil', string.format("Nil<ContractViolation>: Expected nil, received a: %s", type(x)))
+		ret = r['collapse'](type(x) == 'nil', string.format("Nil<TypeViolation>: Expected nil, received a: %s", type(x)))
 		if ret ~= nil then return ret end
 	end
 end
@@ -91,7 +91,7 @@ end
 r['Boolean'] = function()
 	return function(x, kind)
 	  local ret = nil
-	  ret = r['collapse'](type(x) == 'boolean', string.format("Boolean<ContractViolation>: Expected boolean, received: %s", type(x)))
+	  ret = r['collapse'](type(x) == 'boolean', string.format("Boolean<TypeViolation>: Expected boolean, received: %s", type(x)))
 	  if ret ~= nil then return ret end
 	end
 end
@@ -99,7 +99,7 @@ end
 r['True'] = function()
 	return function(x, kind)
 	  local ret = nil
-	  ret = r['collapse'](type(x) == 'boolean', string.format("Boolean<ContractViolation>: Expected boolean, received: %s", type(x)))
+	  ret = r['collapse'](type(x) == 'boolean', string.format("Boolean<TypeViolation>: Expected boolean, received: %s", type(x)))
 	  if ret ~= nil then return ret end
 	  ret = r['collapse'](x == true, string.format("Boolean<ContractViolation>: Expected true."))
 	  if ret ~= nil then return ret end
@@ -109,7 +109,7 @@ end
 r['False'] = function()
 	return function(x, kind)
 	  local ret = nil
-	  ret = r['collapse'](type(x) == 'boolean', string.format("Boolean<ContractViolation>: Expected boolean, received: %s", type(x)))
+	  ret = r['collapse'](type(x) == 'boolean', string.format("Boolean<TypeViolation>: Expected boolean, received: %s", type(x)))
 	  if ret ~= nil then return ret end
 	  ret = r['collapse'](x == false, string.format("Boolean<ContractViolation>: Expected false."))
 	  if ret ~= nil then return ret end
@@ -174,7 +174,7 @@ end
 r['String'] = function()
 	return function(x, kind)
 		local ret = nil
-		ret = r['collapse'](type(x) == 'string', string.format("String<ContractViolation>: Expected a string, recieved: %s", type(x)))
+		ret = r['collapse'](type(x) == 'string', string.format("String<TypeViolation>: Expected a string, recieved: %s", type(x)))
 		if ret ~= nil then return ret end
 	end
 end
@@ -268,7 +268,7 @@ end
 r['Array'] = function()
   return function(x, kind)
     local ret = nil
-    ret = r['collapse'](is_array(x), "Array<ContractViolation>: Expected an array.")
+    ret = r['collapse'](is_array(x), "Array<TypeViolation>: Expected an array.")
     if ret ~= nil then return ret end
   end
 end
@@ -278,7 +278,7 @@ r['ArrayTyped'] = function(TypeSpecifier)
 
 	  local ret = nil
 
-	  ret = r['collapse'](is_array(x), "ArrayTyped<ContractViolation>: Expected an array.")
+	  ret = r['collapse'](is_array(x), "ArrayTyped<TypeViolation>: Expected an array.")
 	  if ret ~= nil then return ret end
 
 	  for idx, cell in ipairs(x) do
@@ -299,7 +299,7 @@ r['ArrayFixed'] = function(length, TypeSpecifier)
     ret = r['collapse'](math.floor(length) == length, string.format("ArrayFixed<ContractViolation>: length is not a whole number."))
     if ret ~= nil then return ret end
 
-    ret = r['collapse'](is_array(x), "ArrayFixed<ContractViolation>: Expected an array.")
+    ret = r['collapse'](is_array(x), "ArrayFixed<TypedViolation>: Expected an array.")
     if ret ~= nil then return ret end
 
     ret = r['collapse'](#x == length, string.format("ArrayFixed<RangeViolation>: Expected an array of length %d but got %d", length, #x))
@@ -329,7 +329,7 @@ r['ArrayRange'] = function(start, finish, TypeSpecifier)
 		if ret ~= nil then return ret end
 
 		-- Check is array
-		ret = r['collapse'](is_array(x), "ArrayRange<ContractViolation>: Expected an array.")
+		ret = r['collapse'](is_array(x), "ArrayRange<TypeViolation>: Expected an array.")
 		if ret ~= nil then return ret end
 
 		-- Check array minimum length
