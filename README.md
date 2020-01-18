@@ -124,6 +124,49 @@ It specifies the given object is:
 
 * A number
 
+## contract.Nil
+
+This is a Type Specifier.
+
+    contract.Nil()
+
+It specifies the given object is:
+
+* ```nil```
+
+## contract.Boolean
+
+This is a Type Specifier.
+
+    contract.Boolean()
+
+It specifies the given object is:
+
+* A boolean
+* Either true or false
+
+## contract.True
+
+This is a Type Specifier.
+
+    contract.True()
+
+It specifies the given object is:
+
+* A boolean
+* true
+
+## contract.False
+
+This is a Type Specifier.
+
+    contract.False()
+
+It specifies the given object is:
+
+* A boolean
+* false
+
 ## contract.IntRange
 
 This is a Type Specifier.

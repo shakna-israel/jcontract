@@ -27,7 +27,7 @@
 
 local r = {}
 
-r['version'] = {0, 3, 0}
+r['version'] = {0, 4, 0}
 
 -- Allow overriding our error response
 r['collapse'] = function(boolean, message)
@@ -78,6 +78,42 @@ r['Float'] = function()
     ret = r['collapse'](type(x) == 'number', string.format("Float<ContractViolation>: Specified value is not a number: %s", x))
   	if ret ~= nil then return ret end
   end
+end
+
+r['Nil'] = function()
+	return function(x, kind)
+		local ret = nil
+		ret = r['collapse'](type(x) == 'nil', string.format("Nil<ContractViolation>: Expected nil, received a: %s", type(x)))
+		if ret ~= nil then return ret end
+	end
+end
+
+r['Boolean'] = function()
+	return function(x, kind)
+	  local ret = nil
+	  ret = r['collapse'](type(x) == 'boolean', string.format("Boolean<ContractViolation>: Expected boolean, received: %s", type(x)))
+	  if ret ~= nil then return ret end
+	end
+end
+
+r['True'] = function()
+	return function(x, kind)
+	  local ret = nil
+	  ret = r['collapse'](type(x) == 'boolean', string.format("Boolean<ContractViolation>: Expected boolean, received: %s", type(x)))
+	  if ret ~= nil then return ret end
+	  ret = r['collapse'](x == true, string.format("Boolean<ContractViolation>: Expected true."))
+	  if ret ~= nil then return ret end
+	end
+end
+
+r['False'] = function()
+	return function(x, kind)
+	  local ret = nil
+	  ret = r['collapse'](type(x) == 'boolean', string.format("Boolean<ContractViolation>: Expected boolean, received: %s", type(x)))
+	  if ret ~= nil then return ret end
+	  ret = r['collapse'](x == false, string.format("Boolean<ContractViolation>: Expected false."))
+	  if ret ~= nil then return ret end
+	end
 end
 
 -- Constructs the integer range assertion function

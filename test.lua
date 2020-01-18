@@ -27,6 +27,42 @@ assert(contract.Float()({}) == bad)
 assert(contract.Float()(1.1) ~= bad)
 assert(contract.Float()(11) ~= bad)
 
+-- Nil Failures
+assert(contract.Nil()(1) == bad)
+assert(contract.Nil()(0) == bad)
+assert(contract.Nil()(true) == bad)
+assert(contract.Nil()("a") == bad)
+assert(contract.Nil()({}) == bad)
+-- Nil Successes
+assert(contract.Nil()(nil) ~= bad)
+
+-- Boolean Failures
+assert(contract.Boolean()(1) == bad)
+assert(contract.Boolean()(0) == bad)
+assert(contract.Boolean()("a") == bad)
+assert(contract.Boolean()({}) == bad)
+-- Boolean Successes
+assert(contract.Boolean()(true) ~= bad)
+assert(contract.Boolean()(false) ~= bad)
+
+-- True Failures
+assert(contract.True()(false) == bad)
+assert(contract.True()(nil) == bad)
+assert(contract.True()(1) == bad)
+assert(contract.True()("a") == bad)
+assert(contract.True()({}) == bad)
+-- True Successes
+assert(contract.True()(true) ~= bad)
+
+-- False Failures
+assert(contract.False()(true) == bad)
+assert(contract.False()(nil) == bad)
+assert(contract.False()(1) == bad)
+assert(contract.False()("a") == bad)
+assert(contract.False()({}) == bad)
+-- False Successes
+assert(contract.False()(false) ~= bad)
+
 -- IntRange Failures
 assert(contract.IntRange(0, 5)(0) == bad)
 assert(contract.IntRange(0, 5)(-1) == bad)
