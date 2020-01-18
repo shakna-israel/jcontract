@@ -1,0 +1,12 @@
+image: alpine/edge
+packages:
+  - luajit
+sources:
+  - https://git.sr.ht/~shakna/jcontract
+tasks:
+  - stats: |
+      which cc
+      luajit -v
+  - build: |
+      cd jcontract
+      luajit test.lua
